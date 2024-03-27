@@ -9,59 +9,7 @@
 
 bool factor(int, int&, int&);//returns true if prime, otherwise referance variables set to factors
 
-class Node {
-private:
-	Node* left;
-	Node* right;
-	int val;
-
-public:
-	Node(int val) {
-		this->val = val;
-		left = NULL;
-		right = NULL;
-	}
-	bool factorize(std::vector<int>& primes) {
-		bool valid = true;
-		if (left == NULL && right == NULL) {
-			int a, b;
-			if (!factor(val, a, b)) {//this val is not prime
-				newFactor(a, b);
-				left->factorize(primes);
-				right->factorize(primes);
-			}
-			else {
-				primes.push_back(val);
-				return valid;
-			}
-		}
-		return valid;
-	}
-	void newFactor(int a, int b) {
-		left = new Node(a);
-		right = new Node(b);
-	}
-};
-
-class Tree {
-private:
-	Node* head;
-	int depth;
-	std::vector<int> primes;
-
-public:
-	Tree(int start = 36) { // default constructor, if no number was given to factor it will default to 36
-		head = new Node(start);
-		depth = 1;
-	}
-
-	std::vector<int> factorize() { // this method grows the tree from the given number returning a vector of prime factors
-		if (!head->factorize(primes)) {
-			exit(1);
-		}
-		return primes;
-	}
-};
+void factorizationNoTree(int cur, std::vector<int>& primes);// recursive function to find all prime factors
 
 int main(int argc, char* argv[])
 {
@@ -82,8 +30,12 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	Tree tree(val);
-	std::vector<int> factors = tree.factorize();
+
+	std::vector<int> factors;
+
+	factorizationNoTree(val, factors);
+
+	std::cout << "Prime factors of " << val << " are: \n";
 	for (int i : factors) {
 		std::cout << std::to_string(i) << " ";
 	}
@@ -103,6 +55,19 @@ bool factor(int val, int& factorA, int& factorB) {
 	}
 	return true;
 }
+
+// Adds all prime factors to int vector
+void factorizationNoTree(int cur, std::vector<int>& primes) {
+	int l, r;
+	if (factor(cur, l, r)) { // factor returns true if cur is prime
+		primes.push_back(cur);
+	}
+	else {
+		factorizationNoTree(l, primes);
+		factorizationNoTree(r, primes);
+	}
+}
+
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
 
