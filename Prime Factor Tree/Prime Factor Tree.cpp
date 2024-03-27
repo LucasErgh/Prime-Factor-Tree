@@ -84,7 +84,9 @@ int main(int argc, char* argv[])
 
 	Tree tree(val);
 	std::vector<int> factors = tree.factorize();
-	for (int i : factors) {
+
+	std::cout << "Prime factors of " << val << " are: \n";
+	for (int i : factors) {// prints list of factors
 		std::cout << std::to_string(i) << " ";
 	}
 
